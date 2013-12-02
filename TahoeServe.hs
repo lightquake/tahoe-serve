@@ -1,5 +1,6 @@
+import qualified Data.ByteString.Lazy          as L
+import qualified Data.ByteString.UTF8          as UTF8
 import qualified Data.Text.Lazy                as T
-import qualified Data.Text.Lazy.Encoding       as E
 import           Network.HTTP.Conduit
 import           Text.Blaze.Html               (toHtml)
 import           Text.Blaze.Html.Renderer.Text (renderHtml)
@@ -12,7 +13,7 @@ main :: IO ()
 main = scotty 16384 $
     get (regex "^/(URI:.*)$") $ do
         uri <- param $ T.pack "1"
-        contents <- fmap (T.unpack . E.decodeUtf8) . simpleHttp $
+        contents <- fmap (UTF8.toString . L.toStrict) . simpleHttp $
                     "http://localhost:6543/uri/" ++ uri
         let rendered = renderHtml $ do
                 H.head $ H.style H.! A.type_ (H.toValue "text/css")
