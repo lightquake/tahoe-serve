@@ -13,12 +13,17 @@ main :: IO ()
 main = scotty 16384 $
     get (regex "^/(URI:.*)$") $ do
         uri <- param $ T.pack "1"
+        fileType <- (param $ T.pack "type") `rescue` const (return "raw")
         contents <- fmap (UTF8.toString . L.toStrict) . simpleHttp $
                     "http://localhost:6543/uri/" ++ uri
-        let rendered = renderHtml $ do
-                H.head $ H.style H.! A.type_ (H.toValue "text/css")
-                    $ toHtml $ styleToCss pygments
-                H.body $ toHtml
-                    $ formatHtmlBlock defaultFormatOpts
-                    $ highlightAs "haskell" contents
-        html rendered
+        serveAs fileType contents
+
+serveAs :: String -> String -> ActionM ()
+serveAs "raw" contents = text $ T.pack contents
+serveAs fileType contents = html rendered
+  where rendered = renderHtml $ do
+            H.head $ H.style H.! A.type_ (H.toValue "text/css")
+                $ toHtml $ styleToCss pygments
+            H.body $ toHtml
+                $ formatHtmlBlock defaultFormatOpts
+                $ highlightAs fileType contents
