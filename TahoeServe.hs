@@ -16,7 +16,7 @@ main = scottyOpts opts $
         uri <- param $ T.pack "1"
         fileType <- (param $ T.pack "type") `rescue` const (return "raw")
         contents <- fmap (UTF8.toString . L.toStrict) . simpleHttp $
-                    "http://localhost:6543/uri/" ++ uri
+                    "http://localhost:3456/uri/" ++ uri
         serveAs fileType contents
   where opts = Options {
             verbose = 0,
