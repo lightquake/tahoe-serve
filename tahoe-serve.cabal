@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                tahoe-serve
-version:             0.0.0
+version:             0.1
 synopsis:            A Tahoe-LAFS HTTP server.
 -- description:
 license:             BSD3
@@ -15,7 +15,7 @@ build-type:          Simple
 -- extra-source-files:
 cabal-version:       >=1.10
 
-executable tahoe-paste
+executable tahoe-serve
   ghc-options:         -Wall
   main-is:             TahoeServe.hs
   build-depends:       base >=4.6 && <4.7,
